@@ -1,50 +1,83 @@
 import "./quoteMachine.css";
+import { Component } from "react";
 import $ from "jquery";
+import React from "react";
 
-function getQuote() {
-  var url =
-    "http://api.forismatic.com/api/1.0/?method=getQuote&lang=en&format=jsonp&jsonp=?";
-  $.getJSON(url, function (data) {
-    console.log(data.quoteText);
-  });
-}
+export default class QuoteMachine extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      color: {
+        color: this.getColor(),
+      },
+      quote: null,
+      author: null,
+    };
+  }
 
-const QuoteMachine = () => {
-  const color =
-    "#" + (Math.random().toString(16) + "000000").substring(2, 8).toUpperCase();
+  componentDidMount() {
+    // this.setState(() => {
+    //   return {
+    //     quote: this.getQuote(),
+    //   };
+    // });
+    console.log(this.getQuote());
+  }
 
-  const divStyle = {
-    color: color,
-  };
+  getColor() {
+    return (
+      "#" +
+      (Math.random().toString(16) + "000000").substring(2, 8).toUpperCase()
+    );
+  }
 
-  getQuote();
+  getQuote() {
+    const url =
+      "http://api.forismatic.com/api/1.0/?method=getQuote&lang=en&format=jsonp&jsonp=?";
+    const res = $.getJSON(url, (data) => {
+      this.setState({
+        quote: data.quoteText,
+        author: data.quoteAuthor,
+      });
+    });
+  }
 
-  document.body.style.backgroundColor = color;
+  render() {
+    document.body.style.backgroundColor = this.state.color.color;
 
-  // fetch("https://api.forismatic.com/api/1.0/", {
-  //   headers: { "content-type": "application/x-www-form-urlencoded" },
-  //   method: "GET",
-  // }).then((response) => console.log(response));
+    return (
+      <div className="wrapper" id="quote-box">
+        <div style={this.state.color} className="box">
+          <div id="quote">{this.state.quote}</div>
+          <div id="author">{this.state.author}</div>
 
-  return (
-    <div className="wrapper" id="quote-box">
-      <div style={divStyle} className="box">
-        <p id="text">Цитата</p>
+          <div className="buttons">
+            <a href="#" id="tweet-quote">
+              <i className="fa fa-twitter" aria-hidden="true"></i>
+            </a>
 
-        <a style={divStyle} href="#" id="tweet-quote">
-          tweet
-        </a>
-        <button style={divStyle} id="new-quote">
-          New quote
-        </button>
+            <button
+              onClick={() => {
+                this.getQuote();
+                this.setState((state) => {
+                  return {
+                    color: {
+                      color: this.getColor(),
+                    },
+                  };
+                });
+              }}
+              style={this.state.color}
+              id="new-quote"
+            >
+              New quote
+            </button>
+          </div>
+        </div>
+        <footer>
+          <a className="creator">By Denis</a>
+        </footer>
       </div>
-      <footer>
-        <a className="author" id="author">
-          Автор
-        </a>
-      </footer>
-    </div>
-  );
-};
-
-export default QuoteMachine;
+    );
+  }
+}

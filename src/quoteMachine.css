@@ -1,4 +1,5 @@
 body {
+  font-family: "Roboto", sans-serif;
   width: 100%;
   height: 100%;
   position: absolute;
@@ -11,7 +12,8 @@ body {
 }
 
 .wrapper {
-  width: 450px;
+  transition-duration: 2s;
+  width: 600px;
   height: 100%;
 }
 
@@ -19,8 +21,42 @@ body {
   background-color: #fff;
   padding: 40px;
   border-radius: 5px;
+  margin-bottom: 10px;
 }
 
-.author {
+#quote {
+  text-align: center;
+  font-size: 35px;
+  font-weight: 700;
+  margin-bottom: 10px;
+}
+
+#author {
+  text-align: right;
+  font-size: 25px;
+  font-style: italic;
+  margin-bottom: 10px;
+}
+
+.buttons {
+  display: flex;
+}
+
+button {
+  border: 0;
+  border-radius: 5px;
+  background-color: #e2e1e1;
   color: #fff;
+  padding: 8px 16px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #bebdbd;
+}
+
+footer {
+  color: #fff;
+  text-align: center;
 }
