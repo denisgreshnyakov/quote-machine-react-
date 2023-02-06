@@ -2,6 +2,7 @@ import "./quoteMachine.css";
 import { Component } from "react";
 import $ from "jquery";
 import React from "react";
+import { CSSTransition } from "react-transition-group";
 
 export default class QuoteMachine extends Component {
   constructor(props) {
@@ -12,16 +13,18 @@ export default class QuoteMachine extends Component {
       },
       quote: null,
       author: null,
+      change: false,
     };
   }
 
-  componentDidMount() {
-    // this.setState(() => {
+  componentDidMount() {}
+
+  componentDidUpdate() {
+    // this.setState((state) => {
     //   return {
-    //     quote: this.getQuote(),
+    //     change: false,
     //   };
     // });
-    console.log(this.getQuote());
   }
 
   getColor() {
@@ -48,7 +51,15 @@ export default class QuoteMachine extends Component {
     return (
       <div className="wrapper" id="quote-box">
         <div style={this.state.color} className="box">
-          <div id="quote">{this.state.quote}</div>
+          <CSSTransition
+            in={this.state.change}
+            timeout={1500}
+            classNames="alert"
+            unmountOnExit
+          >
+            <div id="quote">{this.state.quote}</div>
+          </CSSTransition>
+
           <div id="author">{this.state.author}</div>
 
           <div className="buttons">
@@ -64,8 +75,14 @@ export default class QuoteMachine extends Component {
                     color: {
                       color: this.getColor(),
                     },
+                    change: !this.state.change,
                   };
                 });
+                // this.setState((state) => {
+                //   return {
+                //     change: false,
+                //   };
+                // });
               }}
               style={this.state.color}
               id="new-quote"
