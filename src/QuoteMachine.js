@@ -2,7 +2,6 @@ import "./quoteMachine.css";
 import { Component } from "react";
 import $ from "jquery";
 import React from "react";
-import { CSSTransition } from "react-transition-group";
 
 export default class QuoteMachine extends Component {
   constructor(props) {
@@ -11,20 +10,17 @@ export default class QuoteMachine extends Component {
       color: {
         color: this.getColor(),
       },
-      quote: null,
+      quote: this.getQuote(),
+      elem: null,
       author: null,
-      change: false,
+      change: true,
     };
   }
 
-  componentDidMount() {}
-
-  componentDidUpdate() {
-    // this.setState((state) => {
-    //   return {
-    //     change: false,
-    //   };
-    // });
+  componentDidMount() {
+    this.setState({
+      elem: document.getElementById("box"),
+    });
   }
 
   getColor() {
@@ -47,25 +43,49 @@ export default class QuoteMachine extends Component {
 
   render() {
     document.body.style.backgroundColor = this.state.color.color;
+    const buttons = document.querySelectorAll("button");
+    buttons.forEach((item) => {
+      item.style.background = this.state.color.color;
+    });
 
     return (
       <div className="wrapper" id="quote-box">
-        <div style={this.state.color} className="box">
-          <CSSTransition
-            in={this.state.change}
-            timeout={1500}
-            classNames="alert"
-            unmountOnExit
-          >
-            <div id="quote">{this.state.quote}</div>
-          </CSSTransition>
+        <a
+          className=""
+          id="tweet-quote"
+          title="Tweet this quote!"
+          target="_top"
+          href="https://twitter.com/intent/tweet?hashtags=quotes&amp;related=freecodecamp&amp;text=%22Eighty%20percent%20of%20success%20is%20showing%20up.%22%20Woody%20Allen"
+        >
+          <i className="fa fa-twitter"></i>
+        </a>
+        <div
+          style={this.state.color}
+          className="box"
+          id="box"
+          onAnimationEnd={() => {
+            this.state.elem.classList.remove("change");
+          }}
+        >
+          <div id="text" className="">
+            {this.state.quote}
+          </div>
 
           <div id="author">{this.state.author}</div>
 
           <div className="buttons">
-            <a href="#" id="tweet-quote">
-              <i className="fa fa-twitter" aria-hidden="true"></i>
-            </a>
+            <div className="social">
+              <button className="btn btn-social">
+                <a href="" id="">
+                  <i className="fa fa-twitter" aria-hidden="true"></i>
+                </a>
+              </button>
+              <button className="btn btn-social">
+                <a href="" id="">
+                  <i className="fa fa-tumblr" aria-hidden="true"></i>
+                </a>
+              </button>
+            </div>
 
             <button
               onClick={() => {
@@ -75,16 +95,10 @@ export default class QuoteMachine extends Component {
                     color: {
                       color: this.getColor(),
                     },
-                    change: !this.state.change,
                   };
                 });
-                // this.setState((state) => {
-                //   return {
-                //     change: false,
-                //   };
-                // });
+                this.state.elem.classList.add("change");
               }}
-              style={this.state.color}
               id="new-quote"
             >
               New quote
